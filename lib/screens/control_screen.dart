@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../services/mqtt_service.dart';
 import '../theme.dart';
+import 'robot_screen.dart';
 
 class ControlScreen extends StatelessWidget {
-  const ControlScreen({super.key});
+  final bool activo;
+  const ControlScreen({super.key, this.activo = true});
 
   @override
   Widget build(BuildContext context) {
@@ -15,12 +17,12 @@ class ControlScreen extends StatelessWidget {
         final releOn    = dato?.rele ?? false;
 
         return SafeArea(
-          child: Padding(
+          child: SingleChildScrollView(
             padding: const EdgeInsets.all(20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('Control Manual',
+                const Text('Centro de Control',
                   style: TextStyle(
                     color: FloryColors.textPrimary,
                     fontSize: 22,
@@ -28,10 +30,10 @@ class ControlScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 4),
-                const Text('Gestión directa de dispositivos',
+                const Text('Riego inteligente y robot de monitoreo',
                   style: TextStyle(color: FloryColors.textSecondary, fontSize: 12)),
 
-                const SizedBox(height: 32),
+                const SizedBox(height: 22),
 
                 // Tarjeta control de relé
                 Container(
@@ -41,7 +43,7 @@ class ControlScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(16),
                     border: Border.all(
                       color: releOn
-                          ? FloryColors.accent.withOpacity(0.3)
+                          ? FloryColors.accent.withValues(alpha: 0.3)
                           : FloryColors.border,
                     ),
                   ),
@@ -54,7 +56,7 @@ class ControlScreen extends StatelessWidget {
                             width: 44, height: 44,
                             decoration: BoxDecoration(
                               color: releOn
-                                  ? FloryColors.accent.withOpacity(0.15)
+                                  ? FloryColors.accent.withValues(alpha: 0.15)
                                   : FloryColors.cardLight,
                               borderRadius: BorderRadius.circular(12),
                             ),
@@ -117,7 +119,7 @@ class ControlScreen extends StatelessWidget {
                         Container(
                           padding: const EdgeInsets.all(12),
                           decoration: BoxDecoration(
-                            color: FloryColors.danger.withOpacity(0.1),
+                            color: FloryColors.danger.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: const Row(
@@ -163,6 +165,11 @@ class ControlScreen extends StatelessWidget {
                     ),
                   ),
                 ],
+
+                const SizedBox(height: 28),
+                const Divider(color: FloryColors.border),
+                const SizedBox(height: 18),
+                RobotScreen(activo: activo, integrado: true),
               ],
             ),
           ),
@@ -195,9 +202,9 @@ class _BotonRele extends StatelessWidget {
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.symmetric(vertical: 14),
         decoration: BoxDecoration(
-          color: activo ? color : color.withOpacity(0.1),
+          color: activo ? color : color.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: color.withOpacity(0.4)),
+          border: Border.all(color: color.withValues(alpha: 0.4)),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,

@@ -17,41 +17,52 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _tabIndex = 0;
 
-  final _tabs = const [
-    DashboardScreen(),
-    ControlScreen(),
-    HistoryScreen(),
-    ProfileScreen(),
-  ];
+  void _cambiarTab(int nuevo) {
+    if (nuevo == _tabIndex) return;
+    // Al salir de Control, detiene el robot (también en modo automático).
+    if (_tabIndex == 1 && nuevo != 1) {
+      context.read<MqttService>().enviarComandoRobot('DETENER');
+    }
+    setState(() => _tabIndex = nuevo);
+  }
 
   @override
   void initState() {
     super.initState();
-    // Iniciar conexión MQTT al entrar al home
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<MqttService>().conectar();
+      if (mounted) context.read<MqttService>().conectar();
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    final tabs = [
+      const DashboardScreen(),
+      ControlScreen(activo: _tabIndex == 1),
+      const HistoryScreen(),
+      const ProfileScreen(),
+    ];
+
     return Scaffold(
-      body: IndexedStack(index: _tabIndex, children: _tabs),
+      body: IndexedStack(index: _tabIndex, children: tabs),
       bottomNavigationBar: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           color: FloryColors.card,
           border: Border(top: BorderSide(color: FloryColors.border, width: 1)),
         ),
         child: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8),
+            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 2),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _NavItem(icon: Icons.home_rounded,      label: 'Inicio',   index: 0, selected: _tabIndex == 0, onTap: () => setState(() => _tabIndex = 0)),
-                _NavItem(icon: Icons.tune_rounded,       label: 'Control',  index: 1, selected: _tabIndex == 1, onTap: () => setState(() => _tabIndex = 1)),
-                _NavItem(icon: Icons.show_chart_rounded, label: 'Historial',index: 2, selected: _tabIndex == 2, onTap: () => setState(() => _tabIndex = 2)),
-                _NavItem(icon: Icons.person_outline_rounded, label: 'Perfil', index: 3, selected: _tabIndex == 3, onTap: () => setState(() => _tabIndex = 3)),
+                _NavItem(icon: Icons.home_rounded, label: 'Inicio',
+                    selected: _tabIndex == 0, onTap: () => _cambiarTab(0)),
+                _NavItem(icon: Icons.tune_rounded, label: 'Control',
+                    selected: _tabIndex == 1, onTap: () => _cambiarTab(1)),
+                _NavItem(icon: Icons.show_chart_rounded, label: 'Historial',
+                    selected: _tabIndex == 2, onTap: () => _cambiarTab(2)),
+                _NavItem(icon: Icons.settings_outlined, label: 'Ajustes',
+                    selected: _tabIndex == 3, onTap: () => _cambiarTab(3)),
               ],
             ),
           ),
@@ -63,15 +74,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
 class _NavItem extends StatelessWidget {
   final IconData icon;
-  final String   label;
-  final int      index;
-  final bool     selected;
+  final String label;
+  final bool selected;
   final VoidCallback onTap;
 
   const _NavItem({
     required this.icon,
     required this.label,
-    required this.index,
     required this.selected,
     required this.onTap,
   });
@@ -79,18 +88,21 @@ class _NavItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final color = selected ? FloryColors.accent : FloryColors.textSecondary;
-    return GestureDetector(
-      onTap: onTap,
-      behavior: HitTestBehavior.opaque,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(icon, color: color, size: 24),
-            const SizedBox(height: 4),
-            Text(label, style: TextStyle(color: color, fontSize: 11, fontWeight: FontWeight.w500)),
-          ],
+    return Expanded(
+      child: InkWell(
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 4),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(icon, color: color, size: 23),
+              const SizedBox(height: 4),
+              Text(label, overflow: TextOverflow.ellipsis,
+                style: TextStyle(color: color, fontSize: 10,
+                  fontWeight: FontWeight.w500)),
+            ],
+          ),
         ),
       ),
     );

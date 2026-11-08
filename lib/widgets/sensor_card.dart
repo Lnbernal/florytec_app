@@ -29,7 +29,7 @@ class SensorCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: esAlerta
-              ? FloryColors.warning.withOpacity(0.3)
+              ? FloryColors.warning.withValues(alpha: 0.3)
               : FloryColors.border,
         ),
       ),
@@ -57,7 +57,7 @@ class SensorCard extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
             decoration: BoxDecoration(
-              color: colorEstado.withOpacity(0.12),
+              color: colorEstado.withValues(alpha: 0.12),
               borderRadius: BorderRadius.circular(20),
             ),
             child: Text(estado,

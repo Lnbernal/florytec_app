@@ -43,3 +43,57 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+
+# =====================================
+# FloryTech - Credenciales y secretos
+# =====================================
+
+.env
+.env.*
+!.env.example
+
+# Archivos de configuración privada
+*.key
+*.pem
+*.p12
+*.pfx
+secrets/
+credentials/
+
+# Credenciales locales para Flutter
+dart_defines.json
+dart_defines.local.json
+
+# =====================================
+# Configuración local del editor
+# =====================================
+
+.vscode/launch.json
+.vscode/settings.json
+
+# =====================================
+# Archivos temporales
+# =====================================
+
+*.tmp
+*.bak
+*.orig
+*.zip
+*.rar
+
+# =====================================
+# Resultados de pruebas
+# =====================================
+
+test-results/
+coverage/
+
+# Archivos generados automáticamente por Flutter
+**/generated_plugin_registrant.cc
+**/generated_plugin_registrant.h
+**/generated_plugins.cmake
+**/GeneratedPluginRegistrant.swift
+
+# Carpetas temporales
+**/flutter/ephemeral/

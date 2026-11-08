@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'services/mqtt_service.dart';
-import 'screens/login_screen.dart';
+import 'screens/home_screen.dart';
 import 'theme.dart';
 
 void main() {
@@ -25,7 +25,7 @@ class FloryTechApp extends StatelessWidget {
         title: 'FloryTech',
         debugShowCheckedModeBanner: false,
         theme: floryTheme(),
-        home: const LoginScreen(),
+        home: const HomeScreen(),
       ),
     );
   }

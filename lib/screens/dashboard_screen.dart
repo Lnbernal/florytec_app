@@ -43,9 +43,9 @@ class DashboardScreen extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Column(
+                    const Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
+                      children: [
                         Text('Mi Invernadero',
                           style: TextStyle(
                             color: FloryColors.textPrimary,
@@ -62,8 +62,8 @@ class DashboardScreen extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                       decoration: BoxDecoration(
                         color: conectado
-                            ? FloryColors.accent.withOpacity(0.12)
-                            : FloryColors.danger.withOpacity(0.12),
+                            ? FloryColors.accent.withValues(alpha: 0.12)
+                            : FloryColors.danger.withValues(alpha: 0.12),
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Row(

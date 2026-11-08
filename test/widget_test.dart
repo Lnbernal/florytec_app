@@ -1,30 +1,59 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:florytec_app/main.dart';
+import 'package:florytec_app/screens/home_screen.dart';
+import 'package:florytec_app/services/mqtt_service.dart';
+import 'package:florytec_app/theme.dart';
+
+// Simula MQTT sin conectarse realmente a HiveMQ.
+class MqttServicePrueba extends MqttService {
+  @override
+  Future<void> conectar() async {
+    // No abrir conexiones durante las pruebas.
+  }
+}
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  TestWidgetsFlutterBinding.ensureInitialized();
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+  testWidgets('FloryTech muestra las secciones principales',
+      (WidgetTester tester) async {
+    SharedPreferences.setMockInitialValues({});
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+    // Simula una pantalla de escritorio.
+    tester.view.physicalSize = const Size(1280, 900);
+    tester.view.devicePixelRatio = 1;
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    addTearDown(() {
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+
+    final mqtt = MqttServicePrueba();
+
+    try {
+      await tester.pumpWidget(
+        ChangeNotifierProvider<MqttService>.value(
+          value: mqtt,
+          child: MaterialApp(
+            theme: floryTheme(),
+            home: const HomeScreen(),
+          ),
+        ),
+      );
+
+      await tester.pump();
+
+      expect(find.text('Inicio'), findsOneWidget);
+      expect(find.text('Control'), findsOneWidget);
+      expect(find.text('Historial'), findsOneWidget);
+      expect(find.text('Ajustes'), findsOneWidget);
+    } finally {
+      await tester.pumpWidget(const SizedBox.shrink());
+      mqtt.dispose();
+    }
   });
 }
