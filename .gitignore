@@ -97,3 +97,5 @@ coverage/
 
 # Carpetas temporales
 **/flutter/ephemeral/
+# Widget Preview related
+.widget_preview/

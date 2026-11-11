@@ -64,9 +64,17 @@ class RobotData {
       temperatura: _decimal(json['temperatura']),
       humedadAire: _decimal(json['humedad_aire']),
       humedadSuelo: _entero(json['humedad_suelo']),
-      humedadSueloRaw: _entero(json['humedad_suelo_raw']),
-      mq135Raw: _entero(json['mq135_raw']),
-      distanciaCm: _decimal(json['distancia_cm']),
+      
+      humedadSueloRaw: _entero(
+        json['humedad_suelo_raw'] ?? json['humedad_suelo_adc'],
+      ),
+      mq135Raw: _entero(
+        json['mq135_raw'] ?? json['calidad_aire_adc'],
+      ),
+      distanciaCm: _decimal(
+        json['distancia_cm'] ?? json['distancia'],
+      ),
+
       modo: json['modo']?.toString() ?? 'desconocido',
       movimiento: json['movimiento']?.toString() ?? 'detenido',
       midiendo: _booleano(json['midiendo']),

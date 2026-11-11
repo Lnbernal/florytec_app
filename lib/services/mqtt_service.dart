@@ -75,8 +75,8 @@ enum MqttStatus { disconnected, connecting, connected, error }
 /// MQTT con permisos mínimos (ACL) y nunca una cuenta administrativa.
 class MqttService extends ChangeNotifier {
   static const _host = '6bf5f570aacb4000923acf3c45ae3734.s1.eu.hivemq.cloud';
-  static const _user = String.fromEnvironment('HIVEMQ_USERNAME');
-  static const _pass = String.fromEnvironment('HIVEMQ_PASSWORD');
+  static const _user = 'Florytech';
+  static const _pass = 'Florytech123*';
 
   static const _topicoSensores = 'sensores/datos';
   static const _topicoReleCmd = 'sensores/rele';
